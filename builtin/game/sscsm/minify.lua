@@ -20,7 +20,8 @@
 --
 
 local find, sub, byte = string.find, string.sub, string.byte
-local QUOTE, APOSTROPHE, LBRACKET, BACKSLASH, SPACE, TAB, CR, NEWLINE, HYPHEN, DOT, EQUALS, COLON = byte('"\'[\\ \t\r\n-.=:', 1, -1)
+local QUOTE, APOSTROPHE, LBRACKET, BACKSLASH, SPACE, TAB, CR, NEWLINE, HYPHEN,
+		DOT, EQUALS, COLON = byte('"\'[\\ \t\r\n-.=:', 1, -1)
 
 local function set(...)
 	local res = {}
@@ -86,7 +87,6 @@ local function tokenise(code)
 			until symbol == new_symbol or new_symbol == nil
 		elseif whitespace_bytes[symbol] then
 			-- Consume spaces/tabs
-			local start_idx = end_idx
 			while true do
 				if symbol == NEWLINE then lineno = lineno + 1 end
 
@@ -221,7 +221,7 @@ local function minify(code)
 	local function process_declaration(scope)
 		write_token("local")
 
-		local token, lineno = token_iterator()
+		local token = token_iterator()
 		if token == "function" then
 			write_token("function")
 			write_token(new_var_name(scope, token_iterator()))
@@ -237,7 +237,6 @@ local function minify(code)
 			write_token(token)
 			var_names[#var_names + 1] = #res
 			var_count = var_count + 1
-			-- print('local', token)
 
 			token, lineno = token_iterator()
 			if token == "," then
@@ -270,18 +269,8 @@ local function minify(code)
 
 	local function process_table(scope)
 		write_token("{")
-		-- local token, lineno = token_iterator()
-		-- print(scope, token, lineno)
-		-- if token == "}" then
-		--	 write_token("}")
-		--	 return
-		-- end
-
-		-- print'New table'
-		-- write_token(token)
 		while true do
-			local token, lineno = token_iterator()
-			-- print('In table', token, table.concat(res))
+			local token = token_iterator()
 
 			-- Key
 			local expect_value = false
@@ -319,29 +308,21 @@ local function minify(code)
 			-- Separator (, or =)
 			token, lineno = token_iterator()
 			if expect_value then
-				-- print'Value'
 				assert(token == "=")
 				write_token("=")
 				process_block(scope, "{")
-				-- if res[#res] == "}" then
-				--	 -- print("Break 4")
-				--	 break
-				-- end
 
 				token, lineno = token_iterator()
 			end
 
 			write_token(token)
 
-			-- print'End of table statement'
 			if token == "}" then
-				-- print("Break 5")
 				break
 			elseif token ~= "," then
 				error(("Unexpected token %q on line %d, expected ','"):format(token, lineno))
 			end
 		end
-		-- print('Table end', table.concat(res))
 	end
 
 	function process_block(scope, block_start)
@@ -357,12 +338,12 @@ local function minify(code)
 				-- TODO: Maybe make this verify syntax?
 				write_token("function")
 				local first = true
-				for token, lineno in token_iterator do
-					if token == "(" then
+				for token2 in token_iterator do
+					if token2 == "(" then
 						process_function(scope)
 						break
 					end
-					write_token(first and scope[token] or token)
+					write_token(first and scope[token2] or token2)
 					first = false
 				end
 			elseif token == "local" then
@@ -374,14 +355,14 @@ local function minify(code)
 				write_token("for")
 				for_scope = copy_scope(scope)
 				for_scope["?"] = lineno
-				for token, lineno in token_iterator do
-					if token == "," then
-						write_token(token)
-					elseif token == "in" or token == "=" then
-						write_token(token)
+				for token2 in token_iterator do
+					if token2 == "," then
+						write_token(token2)
+					elseif token2 == "in" or token2 == "=" then
+						write_token(token2)
 						break
 					else
-						write_token(new_var_name(for_scope, token))
+						write_token(new_var_name(for_scope, token2))
 					end
 				end
 			elseif scope_begin[token] then
@@ -430,7 +411,6 @@ local function minify(code)
 
 			elseif token == "{" then
 				-- Parse tables
-				-- print('Parsing table', token, lineno)
 				process_table(scope)
 
 			elseif token == "." or token == ":" then
