@@ -238,16 +238,16 @@ local function minify(code)
 			var_names[#var_names + 1] = #res
 			var_count = var_count + 1
 
-			token, lineno = token_iterator()
+			token = token_iterator()
 			if token == "," then
 				write_token(token)
-				token, lineno = token_iterator()
+				token = token_iterator()
 			elseif token == "=" then
 				write_token("=")
 				for i = 1, var_count do
 					process_block(scope, "local")
 					if i < var_count then
-						token, lineno = token_iterator()
+						token = token_iterator()
 						if token ~= "," then
 							next_token = token
 							break
@@ -306,6 +306,7 @@ local function minify(code)
 			end
 
 			-- Separator (, or =)
+			local lineno
 			token, lineno = token_iterator()
 			if expect_value then
 				assert(token == "=")
