@@ -30,7 +30,7 @@ fi
 echo "Using $toolchain_file"
 
 irrlicht_version=1.8.4
-ogg_version=1.3.2
+ogg_version=1.3.4
 vorbis_version=1.3.5
 curl_version=7.65.3
 gettext_version=0.20.1

@@ -218,9 +218,9 @@ jobs:
     name: VS 2022 ${{ matrix.config.arch }}-${{ matrix.type }}
     runs-on: windows-2022
     env:
-      VCPKG_VERSION: af2287382b1991dbdcb7e5112d236f3323b9dd7a
-#                    2022.03.10
-      vcpkg_packages: irrlicht zlib curl[winssl] openal-soft libvorbis libogg sqlite3 freetype luajit gmp jsoncpp
+      VCPKG_VERSION: 501db0f17ef6df184fcdbfbe0f87cde2313b6ab1
+#                    2023.04.15
+      vcpkg_packages: gettext irrlicht zlib curl[winssl] openal-soft libvorbis libogg sqlite3 freetype luajit gmp jsoncpp
     strategy:
       fail-fast: false
       matrix:
@@ -259,6 +259,9 @@ jobs:
           -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake"  `
           -DCMAKE_BUILD_TYPE=Release  `
           -DENABLE_POSTGRESQL=OFF  `
+          -DENABLE_LUAJIT=TRUE  `
+          -DREQUIRE_LUAJIT=TRUE  `
+          -DENABLE_GETTEXT=TRUE  `
           -DRUN_IN_PLACE=${{ contains(matrix.type, 'portable') }} .
 
       - name: Build
