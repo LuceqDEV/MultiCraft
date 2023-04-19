@@ -49,8 +49,8 @@ cd $builddir
 	-c -O $packagedir/curl-$curl_version.zip
 [ -e $packagedir/gettext-$gettext_version.zip ] || wget http://minetest.kitsunemimi.pw/gettext-$gettext_version-win64.zip \
 	-c -O $packagedir/gettext-$gettext_version.zip
-[ -e $packagedir/freetype2-$freetype_version.zip ] || wget http://minetest.kitsunemimi.pw/freetype2-$freetype_version-win64.zip \
-	-c -O $packagedir/freetype2-$freetype_version.zip
+[ -e $packagedir/freetype-$freetype_version.zip ] || wget http://minetest.kitsunemimi.pw/freetype-$freetype_version-win64.zip \
+	-c -O $packagedir/freetype-$freetype_version.zip
 [ -e $packagedir/sqlite3-$sqlite3_version.zip ] || wget http://minetest.kitsunemimi.pw/sqlite3-$sqlite3_version-win64.zip \
 	-c -O $packagedir/sqlite3-$sqlite3_version.zip
 [ -e $packagedir/luajit-$luajit_version.zip ] || wget http://minetest.kitsunemimi.pw/luajit-$luajit_version-win64.zip \
@@ -69,7 +69,7 @@ cd $libdir
 [ -d libvorbis ] || unzip -o $packagedir/libvorbis-$vorbis_version.zip -d libvorbis
 [ -d libcurl ] || unzip -o $packagedir/curl-$curl_version.zip -d libcurl
 [ -d gettext ] || unzip -o $packagedir/gettext-$gettext_version.zip -d gettext
-[ -d freetype ] || unzip -o $packagedir/freetype2-$freetype_version.zip -d freetype
+[ -d freetype ] || unzip -o $packagedir/freetype-$freetype_version.zip -d freetype
 [ -d sqlite3 ] || unzip -o $packagedir/sqlite3-$sqlite3_version.zip -d sqlite3
 [ -d openal_stripped ] || unzip -o $packagedir/openal_stripped.zip
 [ -d luajit ] || unzip -o $packagedir/luajit-$luajit_version.zip -d luajit
